@@ -1,0 +1,35 @@
+services:
+  pg_ws_secundario:
+    image: postgres:11
+    ports:
+     - "7432:5432"
+    container_name: pg_ws_secundario
+    environment:
+      POSTGRES_USER       : postgres
+      POSTGRES_PASSWORD   : postgres
+
+  ws_secundario:
+    image: siutoba/docker-toba
+    container_name: ws_secundario
+    ports:
+     - "7008:80"
+    environment:
+      DOCKER_NAME                       : ws_secundario
+      DOCKER_WEB_PORT                   : 7008
+      TOBA_PASS                         : toba
+      TOBA_BASE_PASS                    : postgres
+      TOBA_DIR                          : /var/local/ws_secundario/vendor/siu-toba/framework
+      TOBA_INSTALACION_DIR              : /var/local/docker-data/ws_secundario-instalacion
+      TOBA_BASE_HOST                    : pg_ws_secundario
+      TOBA_BASE_NOMBRE                  : toba_ws_secundario
+      TOBA_PROYECTO                     : ws_secundario
+      TOBA_PROYECTO_DIR                 : /var/local/ws_secundario
+      TOBA_PROYECTO_ALIAS               : /ws_secundario
+      TOBA_PROYECTO_INSTALAR            : "True"
+      TOBA_INSTALAR_REFERENCIA          : "True"
+      TOBA_INSTALAR_USUARIOS            : "True"
+    links:
+     - pg_ws_secundario
+    volumes:
+     - .:/var/local/ws_secundario
+     - ./instalacion:/var/local/docker-data/ws_secundario-instalacion
